@@ -8,10 +8,12 @@ from pygame.locals import *
 VHNUM = 3
 CELLNUM = VHNUM * VHNUM
 
+
 # Exit
 def terminate():
     pygame.quit()
     sys.exit()
+
 
 # Generate a new game board randomly
 # If it isn't resolvable, then generate a new one.
@@ -26,14 +28,20 @@ def newGameBoard():
 
     return board
 
+
 # Check if it can be done or not
 def isResolvable(board):
     inversion = 0
-    for i in range(0, len(board)):
-        for j in range(i + 1, len(board)):
-            if board[i] > board[j]:
-                inversion += 1
 
+    tmp = []
+    for i in range(0, len(board)):
+        tmp.append(board[i])
+    tmp.remove(8)
+
+    for i in range(0, len(tmp)):
+        for j in range(i + 1, len(tmp)):
+            if tmp[i] > tmp[j]:
+                inversion += 1
     return inversion % 2 == 0
 
 
