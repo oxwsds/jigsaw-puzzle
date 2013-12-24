@@ -66,7 +66,6 @@ gameRect = gameImage.get_rect()
 screen = pygame.display.set_mode((gameRect.width, gameRect.height))
 pygame.display.set_caption("Jigsaw Puzzle")
 
-#screen.blit(background, backgroundRect)
 
 
 cellWidth = gameRect.width / VHNUM
