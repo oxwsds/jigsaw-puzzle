@@ -22,9 +22,8 @@ def newGameBoard():
 
     random.shuffle(board)
     while not isResolvable(board):
-        print board
         random.shuffle(board)
-    print board
+
     return board
 
 # Check if it can be done or not
@@ -35,7 +34,6 @@ def isResolvable(board):
             if board[i] > board[j]:
                 inversion += 1
 
-    print inversion
     return inversion % 2 == 0
 
 
