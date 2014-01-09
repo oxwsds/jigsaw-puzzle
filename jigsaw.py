@@ -106,4 +106,4 @@ def runGame(vhNum):
 
         pygame.display.update()
 
-runGame(2)
+runGame(3)
