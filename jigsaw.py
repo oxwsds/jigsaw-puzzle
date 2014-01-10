@@ -9,43 +9,50 @@ def terminate():
     pygame.quit()
     sys.exit()
 
+class Jigsaw:
 
-# Generate a new game board randomly
-# If it isn't resolvable, then generate a new one.
-def newGameBoard(cellNum):
-    board = []
-    for i in range(cellNum):
-        board.append(i)
+    # Initialize the jigsaw's size
+    # And generate a new game board randomly
+    def __init__(self, vhNum):
+        self.vhNum = vhNum
+        self.cellNum = vhNum * vhNum
 
-    random.shuffle(board)
-    while not isResolvable(board):
-        random.shuffle(board)
+        self.board = []
+        for i in range(self.cellNum):
+            self.board.append(i)
+        random.shuffle(self.board)
 
-    return board
-
-
-# Check if it can be done or not
-def isResolvable(gameBoard):
-    inversion = 0
-
-    tmp = []
-    for i in range(len(gameBoard)):
-        tmp.append(gameBoard[i])
-    tmp.remove(len(gameBoard) - 1)
-
-    for i in range(0, len(tmp)):
-        for j in range(i + 1, len(tmp)):
-            if tmp[i] > tmp[j]:
-                inversion += 1
-    return inversion % 2 == 0
+        self.whiteCell = self.board.index(self.cellNum - 1)
 
 
-# Have it done?
-def isFinish(gameBoard):
-    for i in range(len(gameBoard)):
-        if i != gameBoard[i]:
-            return False
-    return True
+    # Check if it can be done or not
+    def isResolvable(self):
+        inversion = 0
+        whiteDistance = (self.vhNum - 1) - self.whiteCell / self.vhNum
+
+        tmp = []
+        for i in range(self.cellNum):
+            tmp.append(self.board[i])
+        del tmp[self.whiteCell]
+
+        for i in range(len(tmp)):
+            for j in range(i + 1, len(tmp)):
+                if tmp[i] > tmp[j]:
+                    inversion += 1
+
+        #print self.vhNum == 0
+        if self.vhNum % 2 != 0:
+            return inversion % 2 == 0
+
+        return (inversion % 2 == 0) == (whiteDistance % 2 == 0)
+
+
+    # Have it done?
+    def isFinish(self):
+        for i in range(self.cellNum):
+            if i != self.board[i]:
+                return False
+        return True
 
 
 def runGame(vhNum):
@@ -57,16 +64,19 @@ def runGame(vhNum):
     screen = pygame.display.set_mode((gameRect.width, gameRect.height))
     pygame.display.set_caption("%s*%s Jigsaw Puzzle" % (vhNum, vhNum))
 
+    gameBoard = Jigsaw(vhNum)
+    while not gameBoard.isResolvable():
+        gameBoard = Jigsaw(vhNum)
+
+    whiteCell = gameBoard.whiteCell
+
     cellNum = vhNum * vhNum
     cellWidth = gameRect.width / vhNum
     cellHeight = gameRect.height / vhNum
 
-    gameBoard = newGameBoard(cellNum)
-    whiteCell = gameBoard.index(cellNum - 1)
-
     while True:
 
-        if isFinish(gameBoard) and vhNum < 5:
+        if gameBoard.isFinish() and vhNum < 5:
             runGame(vhNum + 1)
 
         for event in pygame.event.get():
@@ -86,7 +96,7 @@ def runGame(vhNum):
                     or (whiteCell % vhNum != vhNum -1 and index == whiteCell + 1)
                     or (whiteCell % vhNum != 0 and index == whiteCell - 1)):
 
-                    gameBoard[index], gameBoard[whiteCell] = gameBoard[whiteCell], gameBoard[index]
+                    gameBoard.board[index], gameBoard.board[whiteCell] = gameBoard.board[whiteCell], gameBoard.board[index]
                     whiteCell = index
 
         for i in range(vhNum + 1):
@@ -98,12 +108,12 @@ def runGame(vhNum):
             colDst = i % vhNum
             rectDst = pygame.Rect(colDst * cellWidth, rowDst * cellHeight, cellWidth, cellHeight)
 
-            rowSrc = gameBoard[i] / vhNum
-            colSrc = gameBoard[i] % vhNum
+            rowSrc = gameBoard.board[i] / vhNum
+            colSrc = gameBoard.board[i] % vhNum
             rectSrc = pygame.Rect(colSrc * cellWidth, rowSrc * cellHeight, cellWidth, cellHeight)
 
             screen.blit(gameImage, rectDst, rectSrc)
 
         pygame.display.update()
 
-runGame(3)
+runGame(2)
