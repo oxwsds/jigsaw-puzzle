@@ -40,7 +40,6 @@ class Jigsaw:
                 if tmp[i] > tmp[j]:
                     inversion += 1
 
-        #print self.vhNum == 0
         if self.vhNum % 2 != 0:
             return inversion % 2 == 0
 
