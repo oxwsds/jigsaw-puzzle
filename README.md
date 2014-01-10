@@ -2,4 +2,4 @@
 
 A simple jigsaw puzzle game, no novel ideas :-(
 
-Three levels(3*3, 4*4, 5*5)
+Three levels(2*2, 3*3, 4*4, 5*5)
